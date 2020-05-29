@@ -1,0 +1,76 @@
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import datasets
+from sklearn.model_selection import train_test_split
+
+iris=datasets.load_iris()
+
+X=iris.data
+y=iris.target
+
+Xtr, Xts, Ytr, Yts = train_test_split(X,y,test_size=0.2,shuffle=True,random_state=85)
+
+# 20%를 test set으로 지정
+# random_state를 지정하면, random이여도 결과는 모두에게 동일하다.(우리와 같은 결과를 가져오려고 교수님이 설정하심, 처음엔 10으로 설정)
+
+t1=DecisionTreeClassifier(max_depth=None)
+t1.fit(Xtr, Ytr)
+
+y_pred=t1.predict(Xts)
+
+print(t1.score(Xts,Yts))
+print(t1.score(Xtr,Ytr))
+
+y_prob=t1.predict_proba(Xtr)
+#특정 leaf 노드 에서의 개별 class분포로 확률을 계산한 값 출력
+
+
+#_________________________________________________________________________________________________________________________________#
+
+breast=datasets.load_breast_cancer()
+
+X=breast.data
+y=breast.target
+
+Xtr, Xts, Ytr, Yts = train_test_split(X,y,test_size=0.2,shuffle=True,random_state=85)
+
+t1=DecisionTreeClassifier(max_depth=3) #처음에는 10으로 설정 → 3으로 설정: validation에 대한 정확도가 높아지지만, test에 대해서는 낮아짐
+t1.fit(Xtr,Ytr)
+
+print(t1.score(Xts,Yts))
+print(t1.score(Xtr,Ytr))
+
+from sklearn import tree
+import matplotlib.pyplot as plt
+
+tree.plot_tree(t1) #트리가 학습(fit) 된 것이 t1
+
+fig=plt.figure(figsize=(10,8)) #tree 사이즈 조절 : figsize(가로,세로)
+tree.plot_tree(t1)
+
+fit=plt.figure(dpi=200) #해상도 조절(가로, 세로 조절은 자동으로 해줌)
+tree.plot_tree(t1)
+
+fig=plt.figure(dpi=200)
+tree.plot_tree(t1, feature_names=breast.feature_names, class_names=breast.target_names, filled=True)
+
+
+#_________________________________________________________________________________________________________________________________#
+
+from sklearn.tree import DecisionTreeRegressor
+
+boston=datasets.load_boston()
+
+X=boston.data
+y=boston.target
+
+Xtr, Xts, Ytr, Yts = train_test_split(X,y,test_size=0.2,shuffle=True,random_state=85)
+
+t2=DecisionTreeRegressor(max_depth=5,min_samples_split=10, min_samples_leaf=5)
+t2.fit(Xtr,Ytr)
+
+fig=plt.figure(dpi=300)
+tree.plot_tree(t2)
+
+y_pred=t2.predict(Xts)
+print(t2.score(Xts,Yts))
+print(t2.score(Xtr,Ytr))
